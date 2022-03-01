@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "nR5VGbCIp4G1S+ez5d4tp5oRnyhcRvTEwqPEe2+k3t25Qvd8SJYzJM21g1W9zypXyTBTAHuK/b77LAcRyFYIiw==",
+  "success": true,
+  "projectFilePath": "F:\\Users\\wafph\\source\\repos\\NotesAPI\\NotesAPI\\NotesAPI.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\wafph\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\5.0.13\\microsoft.netcore.app.host.win-x64.5.0.13.nupkg.sha512"
+  ],
+  "logs": []
+}
