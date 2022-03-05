@@ -1,13 +1,16 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NotesAPI.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 
 namespace NotesAPI
 {
@@ -22,7 +25,16 @@ namespace NotesAPI
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<NotesContext>(options => 
+                options.UseSqlServer(Configuration.GetConnectionString("NotesConnection")));
+
             services.AddControllersWithViews();
+
+            services.AddSwaggerGen();
+
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            services.AddScoped<INotesRepo, NotesRepoHandler>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -30,6 +42,9 @@ namespace NotesAPI
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+
+                app.UseSwagger();
+                app.UseSwaggerUI();
             }
 
             app.UseHttpsRedirection();
@@ -47,6 +62,7 @@ namespace NotesAPI
                 //    name: "default",
                 //    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
         }
     }
 }
