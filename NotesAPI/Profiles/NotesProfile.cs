@@ -13,8 +13,11 @@ namespace NotesAPI.Profiles
     {
         public NotesProfile()
         {
-            CreateMap<Note, NotePostRequest>();
-            CreateMap<Note, NoteGetShortRequest>();
+            CreateMap<NoteGetShortRequest, Note>();
+            CreateMap<NotePostRequest, Note>();
+            CreateMap<NotePutRequest, Note>();
+            CreateMap<Note, NotePatchRequest>();
+            CreateMap<NotePatchRequest, Note>();
         }
     }
 }

@@ -32,8 +32,37 @@ namespace NotesAPI.Data
 
         public void PostNote(Note note)
         {
-            _context.Notes.AddAsync(note);
-            _context.SaveChangesAsync();
+            if (note == null)
+            {
+                throw new ArgumentNullException(nameof(note));
+            }
+
+            _context.Notes.Add(note);
+        }
+
+        public void PutNote(Note note)
+        {
+
+        }
+
+        public void PatchNote(Note note)
+        {
+            
+        }
+
+        public bool SaveChanges()
+        {
+            return (_context.SaveChanges() >= 0);
+        }
+
+        public void DeleteNote(Note note)
+        {
+            if (note == null)
+            {
+                throw new ArgumentNullException(nameof(note));
+            }
+
+            _context.Notes.Remove(note);
         }
     }
 }

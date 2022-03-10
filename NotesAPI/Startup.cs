@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Newtonsoft.Json.Serialization;
 
 namespace NotesAPI
 {
@@ -28,7 +29,10 @@ namespace NotesAPI
             services.AddDbContext<NotesContext>(options => 
                 options.UseSqlServer(Configuration.GetConnectionString("NotesConnection")));
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddNewtonsoftJson(s =>
+            {
+                s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            });
 
             services.AddSwaggerGen();
 

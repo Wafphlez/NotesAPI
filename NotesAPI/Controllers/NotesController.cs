@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using NotesAPI.Data;
 using NotesAPI.DTOs;
@@ -71,12 +72,86 @@ namespace NotesAPI.Controllers
 
         //POST api/notes/
         [HttpPost()]
-        public ActionResult<Note> PostNote(Note note)
+        public ActionResult<NotePostRequest> PostNote(NotePostRequest noteDto)
         {
-            _repository.PostNote(note);
+            var note = _mapper.Map<Note>(noteDto);
 
-            return Ok(note);
+            note.DateCreated = DateTime.Now;
+            note.DateModified = DateTime.Now;
+
+            _repository.PostNote(note);
+            _repository.SaveChanges();
+
+            return CreatedAtRoute(nameof(GetNoteById), new { Id = note.Id }, note);
         }
+
+        //PUT api/notes/5
+        [HttpPut("{id}")]
+        public ActionResult<NotePutRequest> PutNote(int id, NotePutRequest noteDto)
+        {
+            var note = _repository.GetNoteById(id);
+
+            if (note == null)
+            {
+                return NotFound();
+            }
+
+            note.DateCreated = DateTime.Now;
+            note.DateModified = DateTime.Now;
+
+            _mapper.Map(noteDto, note);
+
+            _repository.PutNote(note);
+            _repository.SaveChanges();
+
+            return NoContent();
+        }
+
+        //PATCH api/notes/5
+        [HttpPatch("{id}")]
+        public ActionResult PatchNote(int id, JsonPatchDocument<NotePatchRequest> patchDocument)
+        {
+            var note = _repository.GetNoteById(id);
+
+            if (note == null)
+            {
+                return NotFound();
+            }
+
+            var noteToPatch = _mapper.Map<NotePatchRequest>(note);
+
+            patchDocument.ApplyTo(noteToPatch, ModelState);
+
+            if (!TryValidateModel(noteToPatch))
+            {
+                return ValidationProblem(ModelState);
+            }
+
+            _mapper.Map(noteToPatch, note);
+
+            _repository.PatchNote(note);
+            _repository.SaveChanges();
+
+            return NoContent();
+        }
+
+        //DELETE api/notes/5
+        [HttpDelete("{id}")]
+        public ActionResult<Note> DeleteNote(int id)
+        {
+            var note = _repository.GetNoteById(id);
+
+            if (note == null)
+            {
+                return NotFound();
+            }
+
+            _repository.DeleteNote(note);
+            _repository.SaveChanges();
+
+            return NoContent();
+        }
+
 
     }
 }
